@@ -1,0 +1,16 @@
+".\Output\DELAY.obj",
+".\Output\IAP.obj",
+".\Output\PWM.obj",
+".\Output\TIMER.obj",
+".\Output\UART.obj",
+".\Output\I2C.obj",
+".\Output\LED.obj",
+".\Output\MPU6050.obj",
+".\Output\NOKIA5110.obj",
+".\Output\OUTPUTDATA.obj",
+".\Output\ISR.obj",
+".\Output\MAIN.obj",
+".\Output\UpstandingCar.obj",
+".\Output\STARTUP.obj" 
+TO ".\Output\EasyBalance" 
+PRINT(".\Listing\EasyBalance.m51") RAMSIZE(256) 

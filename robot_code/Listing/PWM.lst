@@ -1,0 +1,69 @@
+C51 COMPILER V9.01   PWM                                                                   04/26/2018 19:19:43 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE PWM
+OBJECT MODULE PLACED IN .\Output\PWM.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Driver\PWM.c BROWSE INCDIR(.\Common;.\Driver;.\User) DEBUG OBJECTEXTEND PRI
+                    -NT(.\Listing\PWM.lst) OBJECT(.\Output\PWM.obj)
+
+line level    source
+
+   1          
+   2          #include "PWM.h"
+   3          
+   4          /***************************************************************
+   5          ** 函数名称: PWMInit
+   6          ** 功能描述: PWM初始化函数
+   7          ** 输　入:   
+   8          ** 输　出:   
+   9          ** 全局变量: 
+  10          ***************************************************************/
+  11          void PWMInit()
+  12          {       
+  13   1      #if 0  //选择定时器0的溢出脉冲作为PWM时钟源
+                      CCON = 0x00;    //关闭PCA计数器，禁止计数中断，PCA模块0、1中断标志清零
+                      CL = 0;         //自由递增计数的16位PCA定时器的值,初始化为0
+                      CH = 0;
+                      CMOD = 0x04;    
+                      //选择定时器0的溢出脉冲作为PWM时钟源,空闲模式继续计数，禁止PCA计数溢出中断
+                      //定时器0输出频率最高可达系统时钟，可对系统时钟进行1~256分频
+                      //PWM的频率=PCA时钟输入源频率/256
+                      CCAP0H = CCAP0L = 0x80; //用于控制占空比，占空比=(255-CCAPnL)/255*100%
+                      CCAP1H = CCAP1L = 0x80; //初始化占空比为50%
+                      CCAPM0 = 0x42;  //PCA模块0设置为PWM模式：8位PWM输出，无中断
+                      CCAPM1 = 0x42;  //PCA模块1设置为PWM模式：8位PWM输出，无中断
+                      
+                      CR = 1; //PCA计数器阵列开始
+              #else   //选择SYSclk作为PWM时钟源输入
+  28   1              CCON = 0x00;    //关闭PCA计数器，禁止计数中断，PCA模块0、1中断标志清零
+  29   1              CL = 0;         //自由递增计数的16位PCA定时器的值,初始化为0
+  30   1              CH = 0;
+  31   1              CMOD = 0x08;    //SYSclk作为时钟源 PWM频率为20M/256=78125Hz
+  32   1              CCAP0H = CCAP0L = 0xFF; //用于控制占空比，占空比=(255-CCAPnL)/255*100%
+  33   1              CCAP1H = CCAP1L = 0xFF; //初始化占空比为50%
+  34   1              CCAPM0 = 0x42;  //PCA模块0设置为PWM模式：8位PWM输出，无中断
+  35   1              CCAPM1 = 0x42;  //PCA模块1设置为PWM模式：8位PWM输出，无中断
+  36   1              
+  37   1              CR = 1; //PCA计数器阵列开始计数
+  38   1      #endif
+  39   1       }
+  40          
+  41          
+  42          
+  43          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     31    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+C51 COMPILER V9.01   PWM                                                                   04/26/2018 19:19:43 PAGE 2   
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

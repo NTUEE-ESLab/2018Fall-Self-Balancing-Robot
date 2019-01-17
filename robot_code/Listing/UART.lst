@@ -1,0 +1,138 @@
+C51 COMPILER V9.01   UART                                                                  04/26/2018 19:19:43 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE UART
+OBJECT MODULE PLACED IN .\Output\UART.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Driver\UART.c BROWSE INCDIR(.\Common;.\Driver;.\User) DEBUG OBJECTEXTEND PR
+                    -INT(.\Listing\UART.lst) OBJECT(.\Output\UART.obj)
+
+line level    source
+
+   1          
+   2          #include <uart.h>   
+   3          
+   4          /***************************************************************
+   5          ** 函数名称: Uart1Init
+   6          ** 功能描述: UART1初始化函数
+   7          ** 输　入:   
+   8          ** 输　出:   
+   9          ** 全局变量: 
+  10          ***************************************************************/
+  11          void Uart1Init(void)            //9600bps@20.000MHz
+  12          {
+  13   1              PCON &= 0x7F;           //波特率不倍速
+  14   1              SCON = 0x50;            //8位数据,可变波特率
+  15   1              AUXR |= 0x04;           //独立波特率发生器时钟为Fosc,即1T
+  16   1              BRT = 0xBF;                 //设定独立波特率发生器重装值
+  17   1              AUXR |= 0x01;           //串口1选择独立波特率发生器为波特率发生器
+  18   1              AUXR |= 0x10;           //启动独立波特率发生器
+  19   1      }
+  20          
+  21          /***************************************************************
+  22          ** 函数名称: Uart2Init
+  23          ** 功能描述: UART1初始化函数
+  24          ** 输　入:   
+  25          ** 输　出:   
+  26          ** 全局变量: 
+  27          ***************************************************************/
+  28          void Uart2Init(void)            //9600bps@20.000MHz
+  29          {
+  30   1              AUXR1 |= 0x10;       //UART2从P1口切换到P4口
+  31   1              AUXR &= 0xF7;           //波特率不倍速
+  32   1              S2CON = 0x50;           //8位数据,可变波特率
+  33   1              AUXR |= 0x04;           //独立波特率发生器时钟为Fosc,即1T
+  34   1              BRT = 0xBF;                 //设定独立波特率发生器重装值
+  35   1              AUXR |= 0x10;           //启动独立波特率发生器
+  36   1      }
+  37          
+  38          /***************************************************************
+  39          ** 函数名称: UART1ReceiveByte
+  40          ** 功能描述: UART1接收函数
+  41          ** 输　入:   
+  42          ** 输　出:   
+  43          ** 全局变量: 
+  44          ***************************************************************/
+  45          unsigned char UART1ReceiveByte(void)
+  46          {
+  47   1          unsigned char xdata ucRxd1; 
+  48   1          /*if(RI == 1)                                            
+  49   1          {
+  50   1            RI = 0;
+  51   1            ucRxd1 = SBUF;
+  52   1            return(ucRxd1);            
+  53   1          }
+  54   1          //return 0;   */
+C51 COMPILER V9.01   UART                                                                  04/26/2018 19:19:43 PAGE 2   
+
+  55   1              while(RI==0);
+  56   1              RI = 0;
+  57   1              ucRxd1 = SBUF;
+  58   1              return(ucRxd1);
+  59   1      }
+  60          
+  61          /***************************************************************
+  62          ** 函数名称: UART2ReceiveByte
+  63          ** 功能描述: UART2接收函数
+  64          ** 输　入:   
+  65          ** 输　出:   
+  66          ** 全局变量: 
+  67          ***************************************************************/
+  68          unsigned char UART2ReceiveByte(void)
+  69          {
+  70   1          unsigned char xdata ucRxd2; /*
+  71   1              if ((S2CON & 0x01) == 1)  
+  72   1          {  
+  73   1            S2CON &= 0xFE;  
+  74   1            ucRxd2 = S2BUF;
+  75   1                return(ucRxd2);  
+  76   1          }                              */
+  77   1              while((S2CON & 0x01) == 0);
+  78   1              S2CON &= 0xFE;
+  79   1              ucRxd2 = S2BUF;
+  80   1              return(ucRxd2);
+  81   1      }
+  82          
+  83          /***************************************************************
+  84          ** 函数名称: UART1SendByte
+  85          ** 功能描述: UART1发送函数
+  86          ** 输　入:   
+  87          ** 输　出:   
+  88          ** 全局变量: 
+  89          ***************************************************************/
+  90          void UART1SendByte(unsigned char TxD1)  
+  91          {   
+  92   1          SBUF=TxD1;  
+  93   1          while(TI == 0);//等待发送完成 
+  94   1          //while(!TI);//等待发送完成 
+  95   1          TI=0;   
+  96   1      }  
+  97          
+  98          /***************************************************************
+  99          ** 函数名称: UART2SendByte
+ 100          ** 功能描述: UART2发送函数
+ 101          ** 输　入:   
+ 102          ** 输　出:   
+ 103          ** 全局变量: 
+ 104          ***************************************************************/
+ 105          void UART2SendByte(unsigned char TxD2)  
+ 106          {   
+ 107   1          S2BUF=TxD2;  
+ 108   1          while ((S2CON & 0x02) == 0);  
+ 109   1          S2CON &= 0xFD;    
+ 110   1      }   
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     88    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       2
+C51 COMPILER V9.01   UART                                                                  04/26/2018 19:19:43 PAGE 3   
+
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

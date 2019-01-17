@@ -1,0 +1,69 @@
+C51 COMPILER V9.01   DELAY                                                                 04/26/2018 19:19:42 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE DELAY
+OBJECT MODULE PLACED IN .\Output\DELAY.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Driver\DELAY.c BROWSE INCDIR(.\Common;.\Driver;.\User) DEBUG OBJECTEXTEND P
+                    -RINT(.\Listing\DELAY.lst) OBJECT(.\Output\DELAY.obj)
+
+line level    source
+
+   1          
+   2          #include "delay.h"
+   3          #include <intrins.h>
+   4          
+   5          
+   6          /***************************************************************
+   7          ** 函数名称: Delay1ms
+   8          ** 功能描述: 延时1ms函数（不精准）
+   9          ** 输　入:   
+  10          ** 输　出:   
+  11          ** 全局变量: 
+  12          ***************************************************************/
+  13           void Delay1ms()                //@20.000MHz
+  14          {
+  15   1              unsigned char i, j;
+  16   1      
+  17   1              _nop_();
+  18   1              _nop_();
+  19   1              i = 20;
+  20   1              j = 112;
+  21   1              do
+  22   1              {
+  23   2                      while (--j);
+  24   2              } while (--i);
+  25   1      }
+  26          
+  27          
+  28          
+  29          
+  30          /***************************************************************
+  31          ** 函数名称: Delaynms
+  32          ** 功能描述: 延时nms函数（不精准）
+  33          ** 输　入:   
+  34          ** 输　出:   
+  35          ** 全局变量: 
+  36          ***************************************************************/
+  37           void Delaynms(unsigned int n)
+  38           {
+  39   1      
+  40   1         unsigned int i;
+  41   1         for(i=0;i<n;i++) Delay1ms();
+  42   1      
+  43   1       }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     36    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+C51 COMPILER V9.01   DELAY                                                                 04/26/2018 19:19:42 PAGE 2   
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

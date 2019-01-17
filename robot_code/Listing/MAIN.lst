@@ -1,0 +1,63 @@
+C51 COMPILER V9.01   MAIN                                                                  04/26/2018 19:19:45 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Output\MAIN.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE User\MAIN.c BROWSE INCDIR(.\Common;.\Driver;.\User) DEBUG OBJECTEXTEND PRIN
+                    -T(.\Listing\MAIN.lst) OBJECT(.\Output\MAIN.obj)
+
+line level    source
+
+   1          //51单片机平衡小车源码
+   2          //只供参考学习，不得商用，不提供源码分析
+   3          //请用UV4编译，出现WARNING 是正常现象
+   4          //小车平衡度不好时，有条件的同学位可以用显波显测试PID参数，详细的方法请查看图文教程
+   5          #include "includes.h"
+   6          /***************************************************************
+   7          ** 函数名称:  main
+   8          ** 功能描述: 主函数            
+   9          ***************************************************************/
+  10          void main()
+  11          {
+  12   1              DisableInterrupts;//禁止总中断
+  13   1              /*硬件底层初始化*/
+  14   1              CLK_DIV_1();
+  15   1              Timer0Init();   
+  16   1              Timer1Init();
+  17   1              PWMInit();        //调用PWM函数
+  18   1              Uart1Init();     //调用串口1函数
+  19   1              EXTINTInit();   
+  20   1              MPU6050Init();  //调用平衡模块函数
+  21   1              CarUpstandInit();
+  22   1              Delaynms(500);    //延时0.5s
+  23   1              EnableInterrupts; //允许总中断
+  24   1              
+  25   1              while(1)
+  26   1              {
+  27   2          STC_ISP();            //ISP 下载不用冷启动 本函数不用
+  28   2                      BluetoothControl();       //蓝牙控制函数
+  29   2      
+  30   2      /*调试用 确定轮子方向*/
+  31   2      #if 0   
+                              M1=1;
+                              M2=0;
+                              M3=0;
+                              M4=1;
+                              CCAP1H = CCAP1L = 0;
+              #endif                                  
+  38   2              }
+  39   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     43    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

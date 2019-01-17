@@ -1,0 +1,363 @@
+C51 COMPILER V9.01   UPSTANDINGCAR                                                         04/26/2018 19:19:45 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE UPSTANDINGCAR
+OBJECT MODULE PLACED IN .\Output\UpstandingCar.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE User\UpstandingCar.c BROWSE INCDIR(.\Common;.\Driver;.\User) DEBUG OBJECTEX
+                    -TEND PRINT(.\Listing\UpstandingCar.lst) OBJECT(.\Output\UpstandingCar.obj)
+
+line level    source
+
+   1          
+   2          
+   3          #include "includes.h"
+   4          
+   5          unsigned char g_ucLEDCount;
+   6          /******电机控制参数******/
+   7          float g_fSpeedControlOut;
+   8          float g_fAngleControlOut;
+   9          float g_fLeftMotorOut;
+  10          float g_fRightMotorOut;
+  11          /******角度控制参数******/
+  12          int   g_iAccelInputVoltage_Y_Axis ;     //加速度Y轴数据
+  13          int   g_iGyroInputVoltage_X_Axis  ;     //陀螺仪X轴数据
+  14          //long int xdata g_liAccAdd;
+  15          //long int xdata g_liGyroAdd;
+  16          float g_fCarAngle;                              //车模倾角
+  17          float g_fGyroAngleSpeed;                        //角速度                        
+  18          float g_fGyroscopeAngleIntegral;        //角速度积分值
+  19          float g_fGravityAngle;                          //加速度初步计算得到的倾角
+  20          /******速度控制参数******/
+  21          long int   g_liLeftMotorPulse;
+  22          long int   g_liRightMotorPulse;
+  23          float g_fCarSpeed;
+  24          float g_fCarSpeedOld;
+  25          float g_fCarPosition;
+  26          unsigned char g_ucSpeedCountCarry;
+  27          /*-----角度环和速度环PID控制参数-----*/
+  28          float code g_fcAngle_P = 12;    //12            调到能直立 数值大摆动大
+  29          float code g_fcAngle_D = 0.9;   //0.9    调大时左右振动 调到微动就好
+  30          float code g_fcSpeed_P = 8 ;    //8
+  31          float code g_fcSpeed_I = 0.05 ; //0.05
+  32          /******蓝牙控制参数******/
+  33          float xdata g_fBluetoothSpeed;
+  34          float xdata g_fBluetoothDirection;
+  35          
+  36          /***************************************************************
+  37          ** 函数名称: CarUpstandInit
+  38          ** 功能描述: 外部中断初始化函数
+  39          ** 输　入:   
+  40          ** 输　出:   
+  41          ** 全局变量: 
+  42          ***************************************************************/
+  43          void EXTINTInit(void)//外部中断初始化函数
+  44          {
+  45   1      
+  46   1              //EX0 = 1;    //开外部中断INT0
+  47   1          EX1 = 1;    //开外部中断INT1
+  48   1          //IT0 = 1;    //下降沿触发
+  49   1          IT1 = 1;    //下降沿触发
+  50   1      
+  51   1      }
+  52          
+  53          /***************************************************************
+  54          ** 函数名称: CarUpstandInit
+C51 COMPILER V9.01   UPSTANDINGCAR                                                         04/26/2018 19:19:45 PAGE 2   
+
+  55          ** 功能描述: 全局变量初始化函数
+  56          ** 输　入:   
+  57          ** 输　出:   
+  58          ** 全局变量: 
+  59          ***************************************************************/
+  60          void CarUpstandInit()
+  61          {
+  62   1              g_iAccelInputVoltage_Y_Axis = g_iGyroInputVoltage_X_Axis = 0;
+  63   1              g_liLeftMotorPulse = g_liRightMotorPulse = 0;
+  64   1      
+  65   1              g_fCarSpeed    = 0;
+  66   1              g_fCarPosition = 0;
+  67   1              g_fCarAngle    = 0;
+  68   1              g_fGyroAngleSpeed = 0;
+  69   1              g_fGravityAngle   = 0;
+  70   1              g_fGyroscopeAngleIntegral = 0;
+  71   1              g_fAngleControlOut = g_fSpeedControlOut = 0;
+  72   1              g_fLeftMotorOut    = g_fRightMotorOut   = 0;
+  73   1              g_fBluetoothSpeed  = g_fBluetoothDirection = 0;
+  74   1      
+  75   1          g_ucLEDCount = 0;
+  76   1              g_ucSpeedCountCarry = 0;
+  77   1      
+  78   1      }
+  79          /***************************************************************
+  80          ** 函数名称: DataSynthesis
+  81          ** 功能描述: MPU6050数据合成函数
+  82          ** 输　入:   REG_Address : 地址
+  83          ** 输　出:   合成数据
+  84          ** 全局变量: 
+  85          ***************************************************************/
+  86          int DataSynthesis(unsigned char REG_Address)    
+  87          {
+  88   1              int uiHighByte; /*高八位*/
+  89   1              char ucLowByte; /*低八位*/
+  90   1      
+  91   1              uiHighByte = Single_ReadI2C(REG_Address)  ;
+  92   1              ucLowByte  = Single_ReadI2C(REG_Address+1);
+  93   1      
+  94   1              return ((uiHighByte << 8) + ucLowByte);   /*返回合成数据*/
+  95   1      }
+  96          /***************************************************************
+  97          ** 函数名称: SampleInputVoltage
+  98          ** 功能描述: 采样函数             
+  99          ** 输　入:   
+ 100          ** 输　出:   
+ 101          ***************************************************************/
+ 102          void SampleInputVoltage(void)
+ 103          {       
+ 104   1      #if 0 
+                  /*
+                      N次均值滤波，此处N取20。
+                      属于低通滤波的一种，会降低频响，N值要适当，不宜过大过小。
+                      */      
+                      unsigned char ucValue;   
+                      for(ucValue = 0 ; ucValue < 20 ; ucValue ++)
+                      {
+                              g_iAccelInputVoltage_Y_Axis  = DataSynthesis(ACCEL_YOUT_H);//加速度Y轴
+                              g_iGyroInputVoltage_X_Axis = DataSynthesis(GYRO_XOUT_H);//陀螺仪X轴
+                      
+                              g_liAccAdd += g_iAccelInputVoltage_Y_Axis;
+                              g_liGyroAdd += g_iGyroInputVoltage_X_Axis;                      
+C51 COMPILER V9.01   UPSTANDINGCAR                                                         04/26/2018 19:19:45 PAGE 3   
+
+                                                              
+                      }       
+              
+                      g_iAccelInputVoltage_Y_Axis = g_liAccAdd  / 20 ;
+                  g_iGyroInputVoltage_X_Axis  = g_liGyroAdd / 20 ;
+              
+                      g_liAccAdd  = 0;          /*滤波完全局变量要清零，下次调用才不会出错*/
+                  g_liGyroAdd = 0;
+              
+              #else   /*不作任何滤波处理*/
+ 127   1      
+ 128   1              g_iAccelInputVoltage_Y_Axis  = DataSynthesis(ACCEL_YOUT_H);//加速度Y轴
+ 129   1                      g_iGyroInputVoltage_X_Axis   = DataSynthesis(GYRO_XOUT_H) ;//陀螺仪X轴
+ 130   1      
+ 131   1      #endif  
+ 132   1      }
+ 133          
+ 134          /***************************************************************
+ 135          ** 函数名称: SetMotorVoltageAndDirection
+ 136          ** 功能描述: 电机转速及方向控制函数             
+ 137          ** 输　入:   
+ 138          ** 输　出:   
+ 139          ** 全局变量: 
+ 140          ***************************************************************/
+ 141          void SetMotorVoltageAndDirection(int iLeftVoltage,int iRightVoltage)
+ 142          {
+ 143   1              unsigned char ucLeftMotorValue;
+ 144   1              unsigned char ucRighttMotorValue;
+ 145   1              
+ 146   1          if(iLeftVoltage<0)
+ 147   1          {   
+ 148   2            M1 = 0;                                 //右电机前进      角度为负  速度为正
+ 149   2            M2 = 1;
+ 150   2            ucLeftMotorValue = (-iLeftVoltage);
+ 151   2          }
+ 152   1          else 
+ 153   1          {   
+ 154   2            M1 = 1;                                 //右电机后退  角度为正  速度为负
+ 155   2            M2 = 0; 
+ 156   2            ucLeftMotorValue = iLeftVoltage;
+ 157   2          }
+ 158   1      
+ 159   1          if(iRightVoltage<0)
+ 160   1          {   
+ 161   2            M3 = 1;                                 //左电机前进  角度为负  速度为正
+ 162   2            M4 = 0;
+ 163   2            ucRighttMotorValue = (-iRightVoltage);
+ 164   2          }
+ 165   1          else
+ 166   1          {   
+ 167   2            M3 = 0;                                 //左电机后退  角度为正  速度为负
+ 168   2            M4 = 1; 
+ 169   2            ucRighttMotorValue = iRightVoltage;
+ 170   2          }
+ 171   1      
+ 172   1          if(ucLeftMotorValue   == 0) CCAP0H=255;
+ 173   1          if(ucRighttMotorValue == 0) CCAP1H=255;
+ 174   1      
+ 175   1              ucLeftMotorValue   = (255 - ucLeftMotorValue)  ;           
+ 176   1              ucRighttMotorValue = (255 - ucRighttMotorValue);
+ 177   1              
+ 178   1              CCAP0H = CCAP0L = ucLeftMotorValue  ;  //设定PWM0占空比(CCAP0H=255，速度最小)
+C51 COMPILER V9.01   UPSTANDINGCAR                                                         04/26/2018 19:19:45 PAGE 4   
+
+ 179   1              CCAP1H = CCAP1L = ucRighttMotorValue;  //设定PWM1占空比(CCAP0H=255，速度最小)
+ 180   1      
+ 181   1      #if IF_CAR_FALL          /*判断车辆是否跌倒，调试用*/
+ 182   1      
+ 183   1              if(g_fCarAngle > 70 || g_fCarAngle < (-70))
+ 184   1              {
+ 185   2                      CCAP0H = 255 ;  //占空比为零
+ 186   2                      CCAP1H = 255 ;    
+ 187   2              }
+ 188   1      
+ 189   1      #endif
+ 190   1      }
+ 191          
+ 192          /***************************************************************
+ 193          ** 函数名称: MotorOutput
+ 194          ** 功能描述: 电机输出函数
+ 195                       将直立控制、速度控制、方向控制的输出量进行叠加,并加
+ 196                                   入死区常量，对输出饱和作出处理。
+ 197          ** 输　入:   
+ 198          ** 输　出:   
+ 199          ** 全局变量: 
+ 200          ***************************************************************/
+ 201          void MotorOutput(void)
+ 202          {
+ 203   1      #if EN_ANGLE_LOOP
+                      g_fLeftMotorOut = g_fAngleControlOut ;
+                      g_fRightMotorOut = g_fAngleControlOut ;
+              #endif
+ 207   1      #if EN_SPEED_LOOP
+                      g_fLeftMotorOut = g_fAngleControlOut - g_fSpeedControlOut;
+                      g_fRightMotorOut = g_fAngleControlOut - g_fSpeedControlOut;
+              #endif
+ 211   1      #if EN_DIRECTION_LOOP
+ 212   1              g_fLeftMotorOut  = g_fAngleControlOut - g_fSpeedControlOut \
+ 213   1              + g_fBluetoothDirection ;
+ 214   1              //+ g_fBluetoothSpeed + g_fBluetoothDirection ;
+ 215   1              
+ 216   1              g_fRightMotorOut = g_fAngleControlOut - g_fSpeedControlOut \
+ 217   1              - g_fBluetoothDirection ;
+ 218   1              //+ g_fBluetoothSpeed - g_fBluetoothDirection ;
+ 219   1              
+ 220   1      #endif
+ 221   1              
+ 222   1              /*增加死区常数*/
+ 223   1              if(g_fLeftMotorOut>0)       g_fLeftMotorOut  += MOTOR_OUT_DEAD_VAL;
+ 224   1              else if(g_fLeftMotorOut<0)  g_fLeftMotorOut  -= MOTOR_OUT_DEAD_VAL;
+ 225   1              if(g_fRightMotorOut>0)      g_fRightMotorOut += MOTOR_OUT_DEAD_VAL;
+ 226   1              else if(g_fRightMotorOut<0) g_fRightMotorOut -= MOTOR_OUT_DEAD_VAL;
+ 227   1      
+ 228   1              /*输出饱和处理，防止超出PWM范围*/       
+ 229   1              if(g_fLeftMotorOut  > MOTOR_OUT_MAX)    g_fLeftMotorOut  = MOTOR_OUT_MAX;
+ 230   1              if(g_fLeftMotorOut  < MOTOR_OUT_MIN)    g_fLeftMotorOut  = MOTOR_OUT_MIN;
+ 231   1              if(g_fRightMotorOut > MOTOR_OUT_MAX)    g_fRightMotorOut = MOTOR_OUT_MAX;
+ 232   1              if(g_fRightMotorOut < MOTOR_OUT_MIN)    g_fRightMotorOut = MOTOR_OUT_MIN;
+ 233   1      
+ 234   1          SetMotorVoltageAndDirection((int)g_fLeftMotorOut,(int)g_fRightMotorOut);
+ 235   1      }
+ 236          
+ 237          /***************************************************************
+ 238          ** 函数名称: SpeedControl
+ 239          ** 功能描述: 速度环控制函数
+ 240          ** 输　入:   
+C51 COMPILER V9.01   UPSTANDINGCAR                                                         04/26/2018 19:19:45 PAGE 5   
+
+ 241          ** 输　出:   
+ 242          ** 全局变量: 
+ 243          ***************************************************************/
+ 244          void SpeedControl(void)
+ 245          {
+ 246   1          
+ 247   1          g_liRightMotorPulse = g_ucSpeedCountCarry * 65536 + TH0 * 256 + TL0;
+ 248   1              g_ucSpeedCountCarry = 0;        
+ 249   1              TH0 = TL0 = 0 ;
+ 250   1              /*通过PWM输出判断电机转向*/
+ 251   1              if(!MOTOR_LEFT_SPEED_POSITIVE)  g_liLeftMotorPulse  = -g_liLeftMotorPulse ; 
+ 252   1              if(!MOTOR_RIGHT_SPEED_POSITIVE) g_liRightMotorPulse = -g_liRightMotorPulse;
+ 253   1              
+ 254   1              g_fCarSpeed = (float)(g_liLeftMotorPulse  + g_liRightMotorPulse ) * 0.5;
+ 255   1          g_liLeftMotorPulse = g_liRightMotorPulse = 0;         //全局变量 注意及时清零
+ 256   1      
+ 257   1              /*低通滤波*/
+ 258   1          g_fCarSpeed = g_fCarSpeedOld * 0.9 + g_fCarSpeed * 0.1 ;
+ 259   1              g_fCarSpeedOld = g_fCarSpeed;   
+ 260   1              
+ 261   1      
+ 262   1              g_fCarSpeed *= CAR_SPEED_CONSTANT;       //单位：转/秒
+ 263   1              g_fCarPosition += g_fCarSpeed;           //路程  即速度积分
+ 264   1              g_fCarPosition += g_fBluetoothSpeed;
+ 265   1              /*积分上限设限*/
+ 266   1              if((int)g_fCarPosition > SPEED_CONTROL_OUT_MAX)    g_fCarPosition = SPEED_CONTROL_OUT_MAX;
+ 267   1              if((int)g_fCarPosition < SPEED_CONTROL_OUT_MIN)    g_fCarPosition = SPEED_CONTROL_OUT_MIN;
+ 268   1      
+ 269   1              g_fSpeedControlOut = (CAR_SPEED_SET - g_fCarSpeed) * g_fcSpeed_P + \
+ 270   1              (CAR_SPEED_SET - g_fCarPosition) * g_fcSpeed_I; 
+ 271   1      
+ 272   1      }
+ 273          
+ 274          /***************************************************************
+ 275          ** 函数名称: AngleControl
+ 276          ** 功能描述: 角度环控制函数
+ 277          ** 输　入:   
+ 278          ** 输　出:   
+ 279          ** 全局变量: 
+ 280          ***************************************************************/
+ 281          void AngleControl(void)  
+ 282          {
+ 283   1              float fDeltaValue;
+ 284   1              g_fGravityAngle = (g_iAccelInputVoltage_Y_Axis - GRAVITY_OFFSET) * GRAVITY_ANGLE_RATIO ;
+ 285   1              g_fGyroAngleSpeed = (g_iGyroInputVoltage_X_Axis - GYRO_OFFSET) * GYROSCOPE_ANGLE_RATIO  ;       
+ 286   1                                                               
+ 287   1              g_fCarAngle = g_fGyroscopeAngleIntegral ;
+ 288   1              
+ 289   1              fDeltaValue = (g_fGravityAngle - g_fCarAngle) / GRAVITY_ADJUST_TIME_CONSTANT;
+ 290   1              g_fGyroscopeAngleIntegral += (g_fGyroAngleSpeed + fDeltaValue) / GYROSCOPE_ANGLE_SIGMA_FREQUENCY;
+ 291   1      
+ 292   1              g_fAngleControlOut = (CAR_ANGLE_SET - g_fCarAngle)* g_fcAngle_P + \
+ 293   1              (CAR_ANGULARSPEED_SET - g_fGyroAngleSpeed )* g_fcAngle_D ;
+ 294   1      
+ 295   1      }
+ 296          
+ 297          /***************************************************************
+ 298          ** 函数名称: BluetoothControl
+ 299          ** 功能描述: 蓝牙控制函数
+ 300                       手机发送内容
+ 301                                   上：00000010    下：00000001
+ 302                       左：00000011    右：00000100
+C51 COMPILER V9.01   UPSTANDINGCAR                                                         04/26/2018 19:19:45 PAGE 6   
+
+ 303                       停止：00000000
+ 304                       功能键（可自编下位机程序扩展）：
+ 305                       A:00000101      B:00000110
+ 306                       C:00000111      D:00001000
+ 307          ** 输　入:   
+ 308          ** 输　出:   
+ 309          ** 全局变量: 
+ 310          ***************************************************************/
+ 311          void BluetoothControl(void)      
+ 312          {
+ 313   1              unsigned char ucBluetoothValue;
+ 314   1      
+ 315   1              ucBluetoothValue = UART1ReceiveByte();          
+ 316   1              switch (ucBluetoothValue)
+ 317   1              {
+ 318   2                case 0x02 : g_fBluetoothSpeed =   7 ;  break;    //前进
+ 319   2                case 0x01 : g_fBluetoothSpeed = (-30);  break;           //后退
+ 320   2                case 0x03 : g_fBluetoothDirection =   7 ;  break;//左转
+ 321   2                case 0x04 : g_fBluetoothDirection = (-30);  break;//右转
+ 322   2                case 0x05 : g_fBluetoothSpeed =   7 ; break ;
+ 323   2                case 0x06 : g_fBluetoothSpeed = (-30); break ;
+ 324   2                case 0x07 : g_fBluetoothDirection =   7 ;  break;
+ 325   2                case 0x08 : g_fBluetoothDirection = (-30);  break;
+ 326   2                default : g_fBluetoothSpeed = 0; g_fBluetoothDirection = 0; LED2=~LED2;break;
+ 327   2              }
+ 328   1              
+ 329   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1571    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =      8    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     58       9
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
