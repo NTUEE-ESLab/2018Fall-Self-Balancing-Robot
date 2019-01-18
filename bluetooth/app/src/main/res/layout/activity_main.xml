@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="com.bluetooth.admin.balencecar.MainActivity">
+
+    <!--上下两个大区，分为5个垂直区域-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+        <Switch
+            android:layout_width="0dp"
+            android:layout_height="18dp"
+            android:id="@+id/bluetoothswitch"
+            android:layout_weight="0.7"
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="0dp"
+            android:checked="false"
+            android:text="ON/OFF：" />
+        <Button
+            android:text="Search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.6"
+            android:id="@+id/buttonSearchBluetooth"
+            android:onClick="click_bluetoothSearch"
+            android:background="@drawable/button_stytle"/>
+
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+    <Spinner
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.7"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/list_bluetooth"/>
+    <Button
+        android:text="Connect"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.6"
+        android:id="@+id/buttonConnect"
+        android:onClick="click_bluetoothConnect"
+        android:background="@drawable/button_stytle"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:orientation="horizontal" >
+        <!--下面最左方向控制大区-->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="258"
+            android:orientation="vertical" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="120"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:text="Eslab"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="60dp"
+                    android:layout_marginLeft="0dp"
+                    android:id="@+id/TextViewProduct"
+                    android:textAlignment="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_height="0dp"
+                android:layout_weight="120"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:text="U"
+                    android:layout_width="65dp"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="130dp"
+                    android:id="@+id/button_run"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_weight="10"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="50dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:text="L"
+                    android:layout_width="70dp"
+                    android:layout_height="65dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginLeft="0dp"
+                    android:id="@+id/button_left"
+
+                    />
+                <Button
+                    android:text="S"
+                    android:layout_width="70dp"
+                    android:layout_height="65dp"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/button_stop"
+                    />
+
+                <Button
+                    android:text="R"
+                    android:layout_width="70dp"
+                    android:layout_height="65dp"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/button_right"
+                  />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:text="D"
+                    android:layout_width="65dp"
+                    android:layout_height="70dp"
+                    android:layout_marginLeft="130dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_gravity="center_horizontal"
+                    android:id="@+id/button_back"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="90"
+                android:layout_marginLeft="0dp"
+                android:orientation="horizontal" >
+                <Button
+                    android:text="↺"
+                    android:layout_width="70dp"
+                    android:layout_height="65dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginLeft="50dp"
+                    android:id="@+id/button_levo"
+
+                     />
+                <Button
+                    android:text="↻"
+                    android:layout_width="70dp"
+                    android:layout_height="65dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginLeft="85dp"
+                    android:id="@+id/button_dextro"
+                     />
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>
