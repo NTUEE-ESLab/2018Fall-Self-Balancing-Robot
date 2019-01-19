@@ -19,7 +19,7 @@
 
 1. [介紹影片](https://www.youtube.com/watch?v=gLq52RHsBsU)
 
-[![Alt text for your video](http://img.youtube.com/vi/T-D1KVIuvjA/0.jpg)]https://www.youtube.com/watch?v=gLq52RHsBsU)
+[![Alt text for your video](http://img.youtube.com/vi/gLq52RHsBsU/0.jpg)]（https://www.youtube.com/watch?v=gLq52RHsBsU)
 
 
 ## 參考資料
