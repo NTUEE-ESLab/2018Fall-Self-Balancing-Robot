@@ -1,6 +1,6 @@
 # 兩輪自走平衡車
 <p align="center">
-  <img src="https://github.com/NTUEE-ESLab/2018Fall-Self-Balancing-Robot/blob/master/img/IMG_1481.jpg" width="70%" height="70%">
+  <img src="https://raw.githubusercontent.com/NTUEE-ESLab/2018Fall-Self-Balancing-Robot/master/img/IMG_1481.jpg" width="70%" height="70%">
 </p> 
 
 ## 動機
@@ -26,11 +26,11 @@
 
 1. 介紹影片
 
-[![Demo](https://github.com/NTUEE-ESLab/2018Fall-Self-Balancing-Robot/blob/master/img/IMG_3312.png)](https://www.youtube.com/watch?v=ek1j272iAmc)
+[![Demo](https://raw.githubusercontent.com/NTUEE-ESLab/2018Fall-Self-Balancing-Robot/master/img/IMG_3312.png)](https://www.youtube.com/watch?v=ek1j272iAmc)
 
 2. 閃避示範
 
-[![Demo](https://github.com/NTUEE-ESLab/2018Fall-Self-Balancing-Robot/blob/master/img/IMG_1313.png)](https://www.youtube.com/watch?v=SOX47pxRJZg&feature=youtu.be)
+[![Demo](https://raw.githubusercontent.com/NTUEE-ESLab/2018Fall-Self-Balancing-Robot/master/img/IMG_1313.png)](https://www.youtube.com/watch?v=SOX47pxRJZg&feature=youtu.be)
 
 ## 參考資料
 
