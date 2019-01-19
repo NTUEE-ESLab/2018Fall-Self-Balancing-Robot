@@ -50,7 +50,7 @@
 ### 平衡原理
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/NTUEE-ESLab/2018Fall-Self-Balancing-Robot/master/img/IMG_1481.jpg" width="70%" height="70%">
+  <img src="https://raw.githubusercontent.com/NTUEE-ESLab/2018Fall-Self-Balancing-Robot/master/img/IMG_1.png" width="70%" height="70%">
 </p> 
 
 原理就是應用負反饋控制，由測量到的角度和自身平衡時的自然角度的差作為誤差，通過一個叫做PID的控制算法來控制電機轉速和轉向，偏離目標角度時，往前倒就向前跑一點，往後倒就向後跑一點，只要這個過程做的足夠快，參數合適，就能穩穩地站在原地。通過MPU6050檢測小車的角度作為PID 函數的輸入，設定一個平衡角度作為PID函數的目標值，然後把PID函數的輸出作為PWM值驅動電機。然而一般市售的平衡車其實不不穩定，仍然會出現小幅度顯而易見的晃動，因此我們希望在不修改硬體的情況下，實現軟體演算法的平衡，我們在陀螺儀的偵測上加上Kalman Filter，它是一種自回歸濾波器，能夠從一系列的不完全及包含雜訊的測量中，估計動態系統的狀態。卡爾曼濾波會根據各測量量在不同時間下的值，考慮各時間下的聯合分布，再產生對未知變數的估計，因此會比只以單一測量為基礎的估計方式要準。加上這個濾波器後，再調上適合這個平地或斜坡的參數，我們可以實現看起來像不動般停在原地，不論在平地或斜坡上都可以。
@@ -83,7 +83,7 @@ RPI是跑不起來伺服馬達的，後面接了電池座再接一個降壓穩�
 先用灰階的方式讀取，再用高斯分佈去模糊、canny演算法取邊緣去描繪輪廓。有了輪廓之後，用opencv的演算法去逼近成多邊形，取出箭頭的七個頂點座標，用我們的演算法去判定是不是箭頭。
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/NTUEE-ESLab/2018Fall-Self-Balancing-Robot/master/img/IMG_1481.jpg" width="70%" height="70%">
+  <img src="https://raw.githubusercontent.com/NTUEE-ESLab/2018Fall-Self-Balancing-Robot/master/img/IMG_2.png" width="70%" height="70%">
 </p> 
 
 ## 成果
