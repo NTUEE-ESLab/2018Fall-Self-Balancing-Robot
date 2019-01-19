@@ -15,6 +15,13 @@
 
 ### 平衡車零件
 
+|            |RPi3        |Arduino     |
+|:----------:|:----------:|:----------:|
+|Up          |GPIO20      |PIN12       |
+|Down        |GPIO21      |PIN13       |
+|Left        |GPIO23      |PIN5        |
+|Right       |GPIO24      |PIN6        |
+
 ## 成果
 
 1. 介紹影片
@@ -22,7 +29,8 @@
 [![Demo](https://github.com/NTUEE-ESLab/2018Fall-Self-Balancing-Robot/blob/master/img/螢幕快照%202019-01-19%20下午6.30.24.png)](https://www.youtube.com/watch?v=ek1j272iAmc)
 
 2. 閃避示範
-[![Demo](https://github.com/NTUEE-ESLab/2018Fall-Self-Balancing-Robot/blob/master/img/螢幕快照%202019-01-19%20下午6.30.24.png)](https://www.youtube.com/watch?v=ek1j272iAmc)
+
+[![Demo](https://github.com/NTUEE-ESLab/2018Fall-Self-Balancing-Robot/blob/master/img/螢幕快照%202019-01-19%20下午6.30.24.png)](https://www.youtube.com/watch?v=SOX47pxRJZg&feature=youtu.be)
 
 ## 參考資料
 
