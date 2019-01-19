@@ -93,24 +93,26 @@ def imgproc(frame):
 
     # convert color to gray scale and show it
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    #cv2.imshow('gray', gray)
+    cv2.imshow('gray', gray)
+    cv2.waitKey(0)
     
     blur = cv2.GaussianBlur(gray, (5,5),0)
     edge = cv2.Canny(blur, 30, 200)
     edge = cv2.GaussianBlur(edge, (5,5),0)
-    # cv2.imshow('blured edge', edge)
-    # cv2.waitKey(0)
+    cv2.imshow('blured edge', edge)
+    cv2.waitKey(0)
+
     # convert image to black and white and show it
     thresh1, thresh = cv2.threshold(edge, 50, 255, cv2.THRESH_BINARY)
-    # cv2.imshow('thresh', thresh)
-    # cv2.waitKey(0)
+    cv2.imshow('thresh', thresh)
+    cv2.waitKey(0)
     # find contours!
     _,contours, hry = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     # draw all the contours
     cpframe = frame.copy()
     cv2.drawContours(cpframe, contours, -1, (0,0,255), 3)
-    # cv2.imshow('cpframe', cpframe)
-    # cv2.waitKey(0)
+    cv2.imshow('cpframe', cpframe)
+    cv2.waitKey(0)
     
     # ================== TODO ===================
     
@@ -167,5 +169,5 @@ if __name__ == "__main__":
     else:
         img = cv2.imread(sys.argv[1])
         img = imgproc(img)
-        # cv2.imshow('Press any key to exit', img)
-        # cv2.waitKey(0)
+        cv2.imshow('Press any key to exit', img)
+        cv2.waitKey(0)
