@@ -15,10 +15,36 @@
 
 ### 平衡車零件
 
-|Hardware                                                                     |
+|            |Hardware                                                        |
 |:----------:|:----------:|:----------:|:----------:|:----------:|:----------:|
 |RPI         |18650Bat x3 |USB port x1 |SG90 x2     |HC-SR04 x1  |Camera X1   |
 |Arduino     |18650Bat x3 |MPU6050 x1  |GB37 x2     |TB66 x1     | HC-06 x1   |
+
+<table>
+   <tr>
+      <td></td>
+      <td>Hardware</td>
+   </tr>
+   <tr>
+      <td>RPI</td>
+      <td>18650 Bat x3</td>
+      <td>USB port x1</td>
+      <td>SG90 x2</td>
+      <td>HC-SR04 x1</td>
+      <td>Camera x1</td>
+   </tr>
+   <tr>
+      <td>Arduino</td>
+      <td>18650 Bat x3</td>
+      <td>MPU6050 x1</td>
+      <td>GB37 x2</td>
+      <td>TB66 x1</td>
+      <td>HC-06 x1</td>
+   </tr>
+   <tr>
+      <td></td>
+   </tr>
+</table>
 
 
 ## 成果
