@@ -19,7 +19,7 @@
 
 1. [介紹影片](https://www.youtube.com/watch?v=gLq52RHsBsU)
 
-[![Demo](https://github.com/NTUEE-ESLab/2018Fall-Self-Balancing-Robot/blob/master/img/IMG_1481.jpg)](https://www.youtube.com/watch?v=ek1j272iAmc)
+[![Demo](https://github.com/NTUEE-ESLab/2018Fall-Self-Balancing-Robot/blob/master/img/IMG_1481.jpg) width="70%" height="70%"](https://www.youtube.com/watch?v=ek1j272iAmc)
 
 
 ## 參考資料
