@@ -1,5 +1,3 @@
-
-
 #include "./KalmanFilter.h"
 
 //////////////////////////yijielvbo////////////////////
@@ -35,9 +33,9 @@ void KalmanFilter::Kalman_Filter(double angle_m, double gyro_m,float dt,float Q_
   P[0][1] -= K_0 * t_1;
   P[1][0] -= K_1 * t_0;
   P[1][1] -= K_1 * t_1;
-  angle += K_0 * angle_err; //���ŽǶ�
+  angle += K_0 * angle_err;
   q_bias += K_1 * angle_err;
-  angle_dot = gyro_m - q_bias; //���Ž��ٶ�
+  angle_dot = gyro_m - q_bias;
 }
 
 ////////////////////////kalman/////////////////////////
@@ -47,18 +45,15 @@ void KalmanFilter::Kalman_Filter(double angle_m, double gyro_m,float dt,float Q_
 void KalmanFilter::Angletest(int16_t ax,int16_t ay,int16_t az,int16_t gx,int16_t gy,int16_t gz,float dt,float Q_angle,float Q_gyro,
 									float R_angle,float C_0,float K1)
 {
-  // int flag;
-  //ƽ�����
-  float Angle = atan2(ay , az) * 57.3;           //�Ƕȼ��㹫ʽ,Angle:һ�׻����˲��������С��������б�Ƕ�
-  Gyro_x = (gx - 128.1) / 131;              //�Ƕ�ת��
-  Kalman_Filter(Angle, Gyro_x, dt, Q_angle, Q_gyro,R_angle,C_0);            //�����˲�
-  //��ת�Ƕ�Z�����
-  if (gz > 32768) gz -= 65536;              //ǿ��ת��2g  1g
-  Gyro_z = -gz / 131;                      //Z�����ת��
+  float Angle = atan2(ay , az) * 57.3;
+  Gyro_x = (gx - 128.1) / 131;
+  Kalman_Filter(Angle, Gyro_x, dt, Q_angle, Q_gyro,R_angle,C_0);
+  if (gz > 32768) gz -= 65536;
+  Gyro_z = -gz / 131;
   accelz = az / 16.4;
 
-  float angleAx = atan2(ax, az) * 180 / PI; //������x��н�
-  Gyro_y = -gy / 131.00; //������ٶ�
-  Yiorderfilter(angleAx, Gyro_y, dt, K1); //һ���˲�
+  float angleAx = atan2(ax, az) * 180 / PI;
+  Gyro_y = -gy / 131.00;
+  Yiorderfilter(angleAx, Gyro_y, dt, K1);
 
 }

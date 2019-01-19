@@ -1,5 +1,3 @@
-
-
 #ifndef KalmanFilter_h
 #define KalmanFilter_h
 
@@ -30,6 +28,3 @@ private:
 	
 };
 #endif
-//
-// END OF FILE
-//
