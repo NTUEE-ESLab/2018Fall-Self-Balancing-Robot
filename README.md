@@ -88,11 +88,11 @@ RPI是跑不起來伺服馬達的，後面接了電池座再接一個降壓穩�
 
 ## 成果
 
-1.介紹影片
+1. 介紹影片
 
 [![Demo1](https://raw.githubusercontent.com/NTUEE-ESLab/2018Fall-Self-Balancing-Robot/master/img/IMG_3312.png)](https://www.youtube.com/watch?v=ek1j272iAmc)
 
-2.閃避示範
+2. 閃避示範
 
 [![Demo2](https://raw.githubusercontent.com/NTUEE-ESLab/2018Fall-Self-Balancing-Robot/master/img/IMG_1313.png)](https://www.youtube.com/watch?v=SOX47pxRJZg&feature=youtu.be)
 
