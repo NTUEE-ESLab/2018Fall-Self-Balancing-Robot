@@ -19,7 +19,8 @@
 
 1. [介紹影片](https://www.youtube.com/watch?v=gLq52RHsBsU)
 
-[![ScreenShot](/upload/ask/29/W/WebMole_Youtube_Video.png)](http://youtu.be/vt5fpE0bzSY)
+[![Alt text for your video](http://img.youtube.com/vi/T-D1KVIuvjA/0.jpg)]https://www.youtube.com/watch?v=gLq52RHsBsU)
+
 
 ## 參考資料
 
