@@ -9,7 +9,12 @@
 
 ## 架構
 
+裝有MPU6050，透過Kalman Filter的值使量出的加速度更精準，以及GB37帶測速馬達，和馬達驅動機TB6612FNG，使左右兩輪的值給的相同，如有速度偏差容易造成小車平衡不穩，容易翻倒，最重要的裝上藍芽接收器HC-06，實現和RPi溝通
+
 ### RPI
+
+有USB port，使電池座能夠穩定地降壓穩流輸出5V3A的電流，SG90伺服馬達兩組，實現雲台雙軸鏡頭的轉動，以及HC-SR04超音波模組實現遇到障礙物停止移動告訴camera開始辨識的功能，PiCamera搭配opencv實現便是箭頭指示的功能。
+
 
 ### Arduino
 
@@ -20,31 +25,6 @@
 |RPI         |18650Bat x3 |USB port x1 |SG90 x2     |HC-SR04 x1  |Camera X1   |
 |Arduino     |18650Bat x3 |MPU6050 x1  |GB37 x2     |TB66 x1     | HC-06 x1   |
 
-<table>
-   <tr>
-      <td></td>
-      <td>Hardware</td>
-   </tr>
-   <tr>
-      <td>RPI</td>
-      <td>18650 Bat x3</td>
-      <td>USB port x1</td>
-      <td>SG90 x2</td>
-      <td>HC-SR04 x1</td>
-      <td>Camera x1</td>
-   </tr>
-   <tr>
-      <td>Arduino</td>
-      <td>18650 Bat x3</td>
-      <td>MPU6050 x1</td>
-      <td>GB37 x2</td>
-      <td>TB66 x1</td>
-      <td>HC-06 x1</td>
-   </tr>
-   <tr>
-      <td></td>
-   </tr>
-</table>
 
 
 ## 成果
